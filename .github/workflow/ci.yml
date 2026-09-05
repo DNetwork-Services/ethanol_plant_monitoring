@@ -1,0 +1,32 @@
+name: Ethanol Plant CI # This is the name you will se in github action
+
+on: # Run the Workflow when code pushed
+  push:
+    - main
+    - "feature/**"
+  
+  pull_request:  # This Mean if somebody opens a PR Targating main branch, then Github will run our pipeline.
+    branches:
+     -main
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest # Github create a temporary Ubuntu runner for our job.
+
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+
+      - name: Seup Node.jobs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install Depndencies
+        working-deirctory: app
+        run: npm ci
+
+      - name: Build Docker image
+        run: docker build -t ethanol-plant-monitoring:${{ github.sha}} .

@@ -53,6 +53,15 @@ app.get("/api/plant", (req, res) => {
   res.json(plantData);
 });
 
+app.get("/api/plant/summary", (req, res) => {
+  res.json({
+    plantStatus: plantData.plantStatus,
+    dailyProductionKL: plantData.dailyProductionKL,
+    fermentationTankTemperature:
+      plantData.fermentationTank.temperature
+  });
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Ethanol Plant Monitoring running on port ${PORT}`);
 });
